@@ -23,4 +23,17 @@ nguyendmitri@gmail.com.
   "password": "you SMDC password"
 }
 ```
+* to fetch data of the das3vrt1 channel of the SKL instrument of the Electro-L2 satellite
+```Python
+from satdata import providers
+smdc = providers.smdc()
+smdc.authorize()
+df = smdc.fetch(source='electro_l2',
+                instrument='skl',
+                channel='das3vrt1',
+                start_dt='2017-10-14 10:43:38',
+                end_dt='2017-10-14 10:43:47',
+                time_frame='1s',
+                level='default')
+```
 
