@@ -1,4 +1,4 @@
-# SatData - a Python library for fetch space weather datasets
+# SatData - a Python library for fetching space weather datasets
 
 SatData has a machine-learning-ready unified API that allows you to fetch all
 public available space weather datasets of a data center via its provided
