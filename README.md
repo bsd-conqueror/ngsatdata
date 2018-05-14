@@ -10,4 +10,17 @@ provided.
 If you're interested in using SatData in your work, please send me an e-mail to
 nguyendmitri@gmail.com.
 
+# Examples
+
+## To use the SMDC driver
+
+* create a file called smdc_config.json
+* put it to the same folder where smdc.py is located
+* add the following authorization credentials to smdc_config.json
+```
+{
+  "username": "your SMDC username",
+  "password": "you SMDC password"
+}
+```
 
