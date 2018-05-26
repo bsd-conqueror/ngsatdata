@@ -142,6 +142,7 @@ class smdc(DataProvider):
     try:
       query = self._form_query(source, instrument, channel, start_dt, end_dt, time_frame, level)
       response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=None, payload=json.dumps(query))
+      print('Response=',response)
       df = self._json_2_dataframe(response)
       self.logger.debug(df)
       return df
@@ -170,10 +171,14 @@ class smdc(DataProvider):
     dfs = []
     try:
       for series in jobj['data']:
-        data = { 'dt': series['response'][0] }
-        for i in range(1, len(series['response'])):
-          data[series['request']] = series['response'][i]
-        df = pandas.DataFrame(data = data)
+        if series['result']['code'] != 0:
+          df = pandas.DataFrame()
+          self.logger.warning('Provider returned an error response')
+        else:
+          data = { 'dt': series['response'][0] }
+          for i in range(1, len(series['response'])):
+            data[series['request']] = series['response'][i]
+          df = pandas.DataFrame(data = data)
         dfs.append(df)
       if len(dfs) == 1:
         return dfs[0]

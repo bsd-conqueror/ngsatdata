@@ -65,6 +65,13 @@ class TestSmdcProvider(unittest.TestCase):
                                   start_dt='2017-10-14 10:00:00',
                                   end_dt='2017-10-14 12:00:00')
     self.assertEqual(isinstance(df, pandas.DataFrame), True)
+  def get_rss_ace_at_earth_density(self):
+    smdc = providers.smdc()
+    smdc.authorize()
+    df = smdc.fetch(source='rss', instrument='ace_at_earth', channel='density',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
 if __name__ == '__main__':
   # unittest.main()
   suite = unittest.TestLoader().loadTestsFromTestCase(TestSmdcProvider)
