@@ -94,6 +94,7 @@ class smdc(DataProvider):
     r = self.session.post(self.auth_url, data=self.auth_input_form, headers=self.headers)
     if r.status_code == 200 and self.cookie_names['sid'] in self.session.cookies.keys():
       self.logger.debug(self.cookie_names['sid'] + '=' + self.session.cookies[self.cookie_names['sid']])
+      self.logger.debug(self.cookie_names['csrf'] + '=' + self.session.cookies[self.cookie_names['csrf']])
       self.logger.debug('Logged in to %s' % self.auth_url)
       return True
     else:
@@ -141,7 +142,18 @@ class smdc(DataProvider):
 
     try:
       query = self._form_query(source, instrument, channel, start_dt, end_dt, time_frame, level)
-      response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=None, payload=json.dumps(query))
+      headers = {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        # 'Cookie': '%s:%s;%s:%s' % ( self.cookie_names['sid'],
+        #                             self.session.cookies[self.cookie_names['sid']],
+        #                             self.cookie_names['csrf'],
+        #                             self.session.cookies[self.cookie_names['csrf']]),
+        'X-CSRFToken': self.session.cookies[self.cookie_names['csrf']],
+      }
+      # print(headers)
+      # Todo backend won't accept the request without csrf_exempt. Need to work on that
+      response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=headers, payload=json.dumps(query))
       print('Response=',response)
       df = self._json_2_dataframe(response)
       self.logger.debug(df)

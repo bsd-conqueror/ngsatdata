@@ -74,7 +74,8 @@ class DataProvider(object):
           ))
         raise AccessDenied('URL: %s, method: %s' % (api_url, method))
     elif method == 'POST':
-      r = self.session.post(api_url, headers=headers, data=payload)
+      # print(self.session.cookies)
+      r = self.session.post(api_url, headers=headers, data=payload, cookies=self.session.cookies)
       if r.status_code in http_2xx_codes:
         return r.text
       elif r.status_code in http_4xx_codes:
