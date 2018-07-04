@@ -177,7 +177,7 @@ class smdc(DataProvider):
     if jobj is None:
       return None
     
-    if isinstance(jobj, basestring):
+    if isinstance(jobj, str):
       jobj = json.loads(jobj)
 
     dfs = []
