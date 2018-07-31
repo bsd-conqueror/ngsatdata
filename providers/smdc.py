@@ -188,7 +188,8 @@ class smdc(DataProvider):
           data = { 'dt': series['response'][0] }
           for i in range(1, len(series['response'])):
             data[series['request']] = series['response'][i]
-          df = pandas.DataFrame(data = data)
+          df = pandas.DataFrame(data = data).set_index('dt')
+          df.index = pandas.to_datetime(df.index)
         dfs.append(df)
       if len(dfs) == 1:
         return dfs[0]
