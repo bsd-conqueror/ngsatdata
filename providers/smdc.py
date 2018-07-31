@@ -154,9 +154,7 @@ class smdc(DataProvider):
       # print(headers)
       # Todo backend won't accept the request without csrf_exempt. Need to work on that
       response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=headers, payload=json.dumps(query))
-      print('Response=',response)
       df = self._json_2_dataframe(response)
-      self.logger.debug(df)
       return df
 
     except (AccessDenied, MethodNotSupported) as e:
