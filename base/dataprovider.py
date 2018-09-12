@@ -90,7 +90,7 @@ class DataProvider(object):
       raise MethodNotSupported('URL: %s, method: %s' % (api_url, method))
   
   def authorize(self):
-    self.logger.debug('Authorizing with %s...' % self.auth_url)
+    #self.logger.debug('Authorizing with %s...' % self.auth_url)
     pass
 
 

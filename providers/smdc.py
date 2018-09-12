@@ -85,7 +85,7 @@ class smdc(DataProvider):
     # set the csrf token
     if self.cookie_names['csrf'] not in self.session.cookies.keys():
       message = 'Error retrieving csrf token'
-      self.logger.debug(message)
+      #self.logger.debug(message)
       raise AuthenticationError(message)
     
     self.auth_input_form['csrfmiddlewaretoken'] = self.session.cookies[self.cookie_names['csrf']]
@@ -93,13 +93,13 @@ class smdc(DataProvider):
     # authorize with the backend
     r = self.session.post(self.auth_url, data=self.auth_input_form, headers=self.headers)
     if r.status_code == 200 and self.cookie_names['sid'] in self.session.cookies.keys():
-      self.logger.debug(self.cookie_names['sid'] + '=' + self.session.cookies[self.cookie_names['sid']])
-      self.logger.debug(self.cookie_names['csrf'] + '=' + self.session.cookies[self.cookie_names['csrf']])
-      self.logger.debug('Logged in to %s' % self.auth_url)
+      #self.logger.debug(self.cookie_names['sid'] + '=' + self.session.cookies[self.cookie_names['sid']])
+      #self.logger.debug(self.cookie_names['csrf'] + '=' + self.session.cookies[self.cookie_names['csrf']])
+      #self.logger.debug('Logged in to %s' % self.auth_url)
       return True
     else:
       message = 'Error logging in to %s. Invalid credentials' % self.auth_url
-      self.logger.debug(message)
+      #self.logger.debug(message)
       raise AuthenticationError(message)
   
   def get_sources(self):
@@ -197,7 +197,7 @@ class smdc(DataProvider):
     except Exception as e:
       self.logger.error('Error converting JSON response to Pandas Data Frame')
       self.logger.error(e)
-      self.logger.debug(traceback.format_exc())
+      #self.logger.debug(traceback.format_exc())
       return None
 
   def _form_query(self, source, instrument, channel, start_dt, end_dt, time_frame, level='default'):
@@ -253,7 +253,7 @@ class smdc(DataProvider):
         self._resolve_source(source) + '.' + instrument + '.' + channel,
       ]
     }
-    self.logger.debug('Formed query: %s' % query)
+    #self.logger.debug('Formed query: %s' % query)
     return query
 
   def _is_source_available(self, source):
