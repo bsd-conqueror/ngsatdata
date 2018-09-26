@@ -28,10 +28,10 @@ class DataProvider(object):
   auth_url = None
   api_url = None
 
-  def __init__(self, log_level=logging.DEBUG):
+  def __init__(self, log_level=logging.INFO):
     self.logger = self.get_logger(__name__, log_level)
   
-  def get_logger(self, module_name = 'satdata', log_level=logging.DEBUG):
+  def get_logger(self, module_name = 'satdata', log_level=logging.INFO):
     logger = logging.getLogger(module_name)
     if not getattr(logger, 'handler_set', None):
       # get the log level of specified module and set it

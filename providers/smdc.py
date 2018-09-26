@@ -9,6 +9,8 @@ import pandas
 import traceback
 from datetime import datetime, timedelta
 import os
+import logging
+import six
 # import inspect
 # -------- GLOBAL VARIABLES -------- #
 config_file = 'smdc_config.json'
@@ -62,8 +64,8 @@ class smdc(DataProvider):
   metadata = {
     # fill the metadata with data from the provider
   }
-  def __init__(self):
-    self.logger = self.get_logger(__name__)
+  def __init__(self, log_level=logging.INFO): 
+    self.logger = self.get_logger(module_name=__name__, log_level=log_level)
   def authorize(self):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(cur_dir, config_file)
@@ -154,13 +156,23 @@ class smdc(DataProvider):
       # print(headers)
       # Todo backend won't accept the request without csrf_exempt. Need to work on that
       response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=headers, payload=json.dumps(query))
+      self._print_json_response(response)
       df = self._json_2_dataframe(response)
+      print(df)
       return df
 
     except (AccessDenied, MethodNotSupported) as e:
       raise
 
-  def _json_2_dataframe(self, jobj, merge=True, normalize=True):
+  def _print_json_response(self, response):
+    r = json.loads(response)
+    for elem in r['data']:
+      print(elem)
+      self.logger.debug('request: %s' % elem['request'])
+      self.logger.debug('code: %r' % elem['result']['code'])
+      self.logger.debug('response: (' + ','.join(map(lambda l: str(len(l)), elem['response'])) + ')')
+
+  def _json_2_dataframe(self, json_obj, merge=True, normalize=True):
     """Converting the serialized JSON response from the back-end to Pandas DataFrame
 
     Args:
@@ -172,11 +184,11 @@ class smdc(DataProvider):
     Returns:
       a Pandas Data Frame or a list of Pandas Data Frames. None - when an error occurs.
     """
-    if jobj is None:
+    if json_obj is None:
       return None
     
-    if isinstance(jobj, str):
-      jobj = json.loads(jobj)
+    if isinstance(json_obj, six.string_types):
+      jobj = json.loads(json_obj)
 
     dfs = []
     try:
@@ -197,7 +209,7 @@ class smdc(DataProvider):
     except Exception as e:
       self.logger.error('Error converting JSON response to Pandas Data Frame')
       self.logger.error(e)
-      #self.logger.debug(traceback.format_exc())
+      self.logger.debug(traceback.format_exc())
       return None
 
   def _form_query(self, source, instrument, channel, start_dt, end_dt, time_frame, level='default'):

@@ -72,6 +72,16 @@ class TestSmdcProvider(unittest.TestCase):
                                   start_dt='2018-03-24 08:00:00',
                                   end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
     self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
+  def get_dst_index(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='index', instrument='dst', channel='dst',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
 if __name__ == '__main__':
   # unittest.main()
   suite = unittest.TestLoader().loadTestsFromTestCase(TestSmdcProvider)
