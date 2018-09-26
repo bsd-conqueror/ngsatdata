@@ -158,7 +158,6 @@ class smdc(DataProvider):
       response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=headers, payload=json.dumps(query))
       self._print_json_response(response)
       df = self._json_2_dataframe(response)
-      print(df)
       return df
 
     except (AccessDenied, MethodNotSupported) as e:
@@ -167,10 +166,9 @@ class smdc(DataProvider):
   def _print_json_response(self, response):
     r = json.loads(response)
     for elem in r['data']:
-      print(elem)
       self.logger.debug('request: %s' % elem['request'])
       self.logger.debug('code: %r' % elem['result']['code'])
-      self.logger.debug('response: (' + ','.join(map(lambda l: str(len(l)), elem['response'])) + ')')
+      self.logger.debug('response array shape: (' + ','.join(map(lambda l: str(len(l)), elem['response'])) + ')')
 
   def _json_2_dataframe(self, json_obj, merge=True, normalize=True):
     """Converting the serialized JSON response from the back-end to Pandas DataFrame
