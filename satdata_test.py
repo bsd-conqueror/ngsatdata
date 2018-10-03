@@ -100,6 +100,33 @@ class TestSmdcProvider(unittest.TestCase):
                                   end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
     self.assertEqual(isinstance(df, pandas.DataFrame), True)
 
+  def get_index_wolf(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='index', instrument='wolf', channel='wolfnumber',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
+  def get_meteor_m2_das4vrt7(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='meteor_m2', instrument='skl1', channel='das4vrt7',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
+  def get_electro_l2_das3vrt6(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='electro_l2', instrument='skl', channel='das3vrt6',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
 if __name__ == '__main__':
   # unittest.main()
   suite = unittest.TestLoader().loadTestsFromTestCase(TestSmdcProvider)
