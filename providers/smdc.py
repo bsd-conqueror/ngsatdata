@@ -263,6 +263,8 @@ class smdc(DataProvider):
         self._resolve_source(source) + '.' + instrument + '.' + channel,
       ]
     }
+    if level != 'default':
+      query['options'] = { 'level': 'level2' }
     #self.logger.debug('Formed query: %s' % query)
     return query
 

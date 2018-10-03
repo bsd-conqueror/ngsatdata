@@ -82,6 +82,24 @@ class TestSmdcProvider(unittest.TestCase):
                                   end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
     self.assertEqual(isinstance(df, pandas.DataFrame), True)
 
+  def get_goes_level2_e20_with_level(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='goes15', instrument='e13ew_e2', channel='e2',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='1h', level='level2')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
+  def get_goes_level2_e20_with_source_name(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='goes15_level2', instrument='e13ew_e2', channel='e2',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
 if __name__ == '__main__':
   # unittest.main()
   suite = unittest.TestLoader().loadTestsFromTestCase(TestSmdcProvider)
