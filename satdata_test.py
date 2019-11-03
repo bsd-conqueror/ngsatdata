@@ -145,6 +145,15 @@ class TestSmdcProvider(unittest.TestCase):
                                   end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
     self.assertEqual(isinstance(df, pandas.DataFrame), True)
 
+  def get_model_solar_wind_forecast(self):
+    import logging
+    smdc = providers.smdc(log_level=logging.DEBUG)
+    smdc.authorize()
+    df = smdc.fetch(source='models', instrument='ch', channel='forecast_sw_speed_193p',
+                                  start_dt='2018-03-24 08:00:00',
+                                  end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
+    self.assertEqual(isinstance(df, pandas.DataFrame), True)
+
 if __name__ == '__main__':
   # unittest.main()
   suite = unittest.TestLoader().loadTestsFromTestCase(TestSmdcProvider)
