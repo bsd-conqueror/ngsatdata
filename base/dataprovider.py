@@ -12,15 +12,17 @@ http_5xx_codes = [500, 501, 502, 503, 504, 511, 520, 521, 522, 525, 530]
 http_4xx_codes = [400, 401, 403, 405, 408, 421, 422]
 http_2xx_codes = [200, 201]
 
+
 def is_driver(driver_name):
   if driver_name in DRIVERS:
     return True
   return False
 
+
 class DataProvider(object):
   api_key = None
   api_secret = None
-  timeout = 3 # 3 seconds
+  timeout = 3  # 3 seconds
   response = None
   request = None
   logger = None
@@ -30,19 +32,20 @@ class DataProvider(object):
 
   def __init__(self, log_level=logging.INFO):
     self.logger = self.get_logger(__name__, log_level)
-  
-  def get_logger(self, module_name = 'satdata', log_level=logging.INFO):
+
+  def get_logger(self, module_name='satdata', log_level=logging.INFO):
     logger = logging.getLogger(module_name)
     if not getattr(logger, 'handler_set', None):
       # get the log level of specified module and set it
       logger.setLevel(log_level)
       # stomp = {'host': '127.0.0.1', 'port': 61613, 'login': 'guest', 'password': 'guest', 'queue' : '/topic/kp'}
       # create console handler and set level to debug
-      
+
       console_handler = logging.StreamHandler()
       console_handler.setLevel(log_level)
 
-      formatter = logging.Formatter(fmt = '[%(asctime)s] %(name)s: %(lineno)d: %(levelname)s: %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')
+      formatter = logging.Formatter(
+          fmt='[%(asctime)s] %(name)s: %(lineno)d: %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
       console_handler.setFormatter(formatter)
 
       # add fh to logger
@@ -71,7 +74,7 @@ class DataProvider(object):
             method,
             headers,
             payload
-          ))
+        ))
         raise AccessDenied('URL: %s, method: %s' % (api_url, method))
     elif method == 'POST':
       # print(self.session.cookies)
@@ -84,16 +87,11 @@ class DataProvider(object):
             method,
             headers,
             payload
-          ))
+        ))
         raise AccessDenied('URL: %s, method: %s' % (api_url, method))
     else:
       raise MethodNotSupported('URL: %s, method: %s' % (api_url, method))
-  
+
   def authorize(self):
     #self.logger.debug('Authorizing with %s...' % self.auth_url)
     pass
-
-
-
-
-

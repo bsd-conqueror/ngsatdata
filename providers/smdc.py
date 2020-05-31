@@ -15,29 +15,30 @@ import six
 # -------- GLOBAL VARIABLES -------- #
 config_file = 'smdc_config.json'
 satellite_2_noradid = {
-  'soho': 23726,
-  'sdo': 36395,
-  'ace': 24912,
-  'goes13': 29155,
-  'goes14': 35491,
-  'goes15': 36411,
-  'meteor_m1': 35865,
-  'goes15': 36411,
-  'meteor_m1': 35865,
-  'meteor_m2': 40069,
-  'electro_l1': 37344,
-  'electro_l2': 41105,
-  'lomonosov': 41464,
-  'dscovr': 40390,
-  'vernov': 40070,
+    'soho': 23726,
+    'sdo': 36395,
+    'ace': 24912,
+    'goes13': 29155,
+    'goes14': 35491,
+    'goes15': 36411,
+    'meteor_m1': 35865,
+    'goes15': 36411,
+    'meteor_m1': 35865,
+    'meteor_m2': 40069,
+    'electro_l1': 37344,
+    'electro_l2': 41105,
+    'lomonosov': 41464,
+    'dscovr': 40390,
+    'vernov': 40070,
 }
 time_frames = ['1s', '10s', '1m', '5m', '10m', '1h', '6h', 'auto']
 dt_format = '%Y-%m-%d %H:%M:%S'
 # -------- END OF GLOBAL VARIABLES -------- #
 
+
 class smdc(DataProvider):
   """The driver to work with the SMDC provider
-  
+
   Attributes:
     logger (:obj:): The internal Python logging object.
     auth_url (str): The URL for authorization.
@@ -50,27 +51,30 @@ class smdc(DataProvider):
   api_url = 'https://downloader.sinp.msu.ru/db_iface/api/v2/'
   # smdc auth credential related
   auth_input_form = {
-    'username': None,
-    'password': None,
-    'csrfmiddlewaretoken': None
-  }
+      'username': None,
+      'password': None,
+      'csrfmiddlewaretoken': None
+      }
   headers = {
-    'referer': 'https://downloader.sinp.msu.ru/accounts/login/'
-  }
+      'referer': 'https://downloader.sinp.msu.ru/accounts/login/'
+      }
   cookie_names = {
-    'sid': 'sessionid',
-    'csrf': 'csrftoken'
-  }
+      'sid': 'sessionid',
+      'csrf': 'csrftoken'
+      }
   metadata = {
-    # fill the metadata with data from the provider
-  }
-  def __init__(self, log_level=logging.INFO): 
+      # fill the metadata with data from the provider
+      }
+
+  def __init__(self, log_level=logging.INFO):
     self.logger = self.get_logger(module_name=__name__, log_level=log_level)
+
   def authorize(self):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(cur_dir, config_file)
     if not os.path.exists(config_path):
-      raise AuthConfigNotFound('Please create a file called %s where %s is located and put auth credentials there' % (config_file, __file__))
+      raise AuthConfigNotFound(
+          'Please create a file called %s where %s is located and put auth credentials there' % (config_file, __file__))
 
     with open(config_path, 'r') as f:
       auth_obj = json.load(f)
@@ -87,9 +91,9 @@ class smdc(DataProvider):
     # set the csrf token
     if self.cookie_names['csrf'] not in self.session.cookies.keys():
       message = 'Error retrieving csrf token'
-      #self.logger.debug(message)
+      # self.logger.debug(message)
       raise AuthenticationError(message)
-    
+
     self.auth_input_form['csrfmiddlewaretoken'] = self.session.cookies[self.cookie_names['csrf']]
 
     # authorize with the backend
@@ -101,15 +105,16 @@ class smdc(DataProvider):
       return True
     else:
       message = 'Error logging in to %s. Invalid credentials' % self.auth_url
-      #self.logger.debug(message)
+      # self.logger.debug(message)
       raise AuthenticationError(message)
-  
+
   def get_sources(self):
     pass
+
   def fetch(self, source, instrument, channel, start_dt, end_dt, time_frame, level='default', *args, **kargs):
     """Fetching data from a column of a table in a schema for a time interval with specific time frame
 
-    
+
     Example payload
     {
       "where": {
@@ -145,17 +150,18 @@ class smdc(DataProvider):
     try:
       query = self._form_query(source, instrument, channel, start_dt, end_dt, time_frame, level)
       headers = {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        # 'Cookie': '%s:%s;%s:%s' % ( self.cookie_names['sid'],
-        #                             self.session.cookies[self.cookie_names['sid']],
-        #                             self.cookie_names['csrf'],
-        #                             self.session.cookies[self.cookie_names['csrf']]),
-        'X-CSRFToken': self.session.cookies[self.cookie_names['csrf']],
-      }
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+          # 'Cookie': '%s:%s;%s:%s' % ( self.cookie_names['sid'],
+          #                             self.session.cookies[self.cookie_names['sid']],
+          #                             self.cookie_names['csrf'],
+          #                             self.session.cookies[self.cookie_names['csrf']]),
+          'X-CSRFToken': self.session.cookies[self.cookie_names['csrf']],
+          }
       # print(headers)
       # Todo backend won't accept the request without csrf_exempt. Need to work on that
-      response = super(smdc, self).fetch(self.api_url + 'query/', method='POST', headers=headers, payload=json.dumps(query))
+      response = super(smdc, self).fetch(self.api_url + 'query/', method='POST',
+                                         headers=headers, payload=json.dumps(query))
       self._print_json_response(response)
       df = self._json_2_dataframe(response)
       return df
@@ -184,7 +190,7 @@ class smdc(DataProvider):
     """
     if json_obj is None:
       return None
-    
+
     if isinstance(json_obj, six.string_types):
       jobj = json.loads(json_obj)
 
@@ -195,10 +201,10 @@ class smdc(DataProvider):
           df = pandas.DataFrame()
           self.logger.warning('Provider returned an error response')
         else:
-          data = { 'dt': series['response'][0] }
+          data = {'dt': series['response'][0]}
           for i in range(1, len(series['response'])):
             data[series['request']] = series['response'][i]
-          df = pandas.DataFrame(data = data).set_index('dt')
+          df = pandas.DataFrame(data=data).set_index('dt')
           df.index = pandas.to_datetime(df.index)
         dfs.append(df)
       if len(dfs) == 1:
@@ -212,10 +218,10 @@ class smdc(DataProvider):
 
   def _form_query(self, source, instrument, channel, start_dt, end_dt, time_frame, level='default'):
     """Forming a query according to the syntax of SMDC REST API
-    
+
     Returns:
       dict: a dictionary that contains the query
-    
+
     Raises:
       SatelliteNotFound:
       InstrumentNotFound:
@@ -254,18 +260,18 @@ class smdc(DataProvider):
       raise DatetimeValueError('Invalid end_dt: %s' % end_dt)
 
     query = {
-      "where": {
-        "resolution": time_frame,
-        "min_dt": start_dt,
-        "max_dt": end_dt,
-      },
-      "select": [
-        self._resolve_source(source) + '.' + instrument + '.' + channel,
-      ]
+        "where": {
+            "resolution": time_frame,
+            "min_dt": start_dt,
+            "max_dt": end_dt,
+        },
+        "select": [
+            self._resolve_source(source) + '.' + instrument + '.' + channel,
+        ]
     }
     if level != 'default':
-      query['options'] = { 'level': 'level2' }
-    #self.logger.debug('Formed query: %s' % query)
+      query['options'] = {'level': 'level2'}
+    # self.logger.debug('Formed query: %s' % query)
     return query
 
   def _is_source_available(self, source):
@@ -318,6 +324,7 @@ class smdc(DataProvider):
     else:
       return source
 
+
 class models(smdc):
   def __init__(self):
     self.logger = self.get_logger(__name__)
@@ -334,11 +341,12 @@ class models(smdc):
     instrument = 'sw_forecast_' + wave_length
     channel = 'forecast_sw_speed'
     return self.fetch(source=source,
-                                      instrument=instrument,
-                                      channel=channel,
-                                      start_dt=start_dt,
-                                      end_dt=end_dt,
-                                      time_frame='auto')
+                      instrument=instrument,
+                      channel=channel,
+                      start_dt=start_dt,
+                      end_dt=end_dt,
+                      time_frame='auto')
+
 
 class goes13(smdc):
   def __init__(self):
@@ -356,8 +364,8 @@ class goes13(smdc):
     instrument = 'sw_forecast_' + wave_length
     channel = 'forecast_sw_speed'
     return self.fetch(source=source,
-                                      instrument=instrument,
-                                      channel=channel,
-                                      start_dt=start_dt,
-                                      end_dt=end_dt,
-                                      time_frame='auto')
+                      instrument=instrument,
+                      channel=channel,
+                      start_dt=start_dt,
+                      end_dt=end_dt,
+                      time_frame='auto')
