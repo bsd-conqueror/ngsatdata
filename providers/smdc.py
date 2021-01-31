@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import logging
+import six
 import requests
-from satdata.base.dataprovider import DataProvider
-from satdata.base.errors import *
 import json
 import pandas
 import traceback
 from datetime import datetime, timedelta
-import os
-import logging
-import six
+
+from satdata.base.dataprovider import DataProvider
+from satdata.base.errors import *
+from .source import Source
 # import inspect
 # -------- GLOBAL VARIABLES -------- #
 config_file = 'smdc_config.json'
@@ -49,6 +51,7 @@ class smdc(DataProvider):
   """
   auth_url = 'https://downloader.sinp.msu.ru/accounts/login/'
   api_url = 'https://downloader.sinp.msu.ru/db_iface/api/v2/'
+  metadata_url = 'https://downloader.sinp.msu.ru/db_iface/api/v1/full/'
   # smdc auth credential related
   auth_input_form = {
       'username': None,
@@ -109,7 +112,9 @@ class smdc(DataProvider):
       raise AuthenticationError(message)
 
   def get_sources(self):
-    pass
+    response = self.session.get(self.metadata_url, headers=self.headers)
+    metadata = response.json()
+    return [Source(codename=codename, metadata=source_metadata) for codename, source_metadata in metadata['data'].items()]
 
   def fetch(self, source, instrument, channel, start_dt, end_dt, time_frame, level='default', *args, **kargs):
     """Fetching data from a column of a table in a schema for a time interval with specific time frame
