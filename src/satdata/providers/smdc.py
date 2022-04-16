@@ -5,6 +5,7 @@ import logging
 import os
 import traceback
 from datetime import datetime
+from typing import Dict
 
 import pandas
 import requests
@@ -40,39 +41,54 @@ dt_format = '%Y-%m-%d %H:%M:%S'
 # -------- END OF GLOBAL VARIABLES -------- #
 
 
-class smdc(DataProvider):
+class SMDC(DataProvider):
     """The driver to work with the SMDC provider
 
     Attributes:
-      logger (:obj:): The internal Python logging object.
-      auth_url (str): The URL for authorization.
-      api_url (str):
-      auth_input_form (dict):
-      cookie_names (dict):
-
+        logger (obj): The internal Python logging object.
+        auth_url (str): The URL for authorization.
+        api_url (str): The URL for api access
+        auth_input_form (dict): 
+        cookie_names (dict):
+    
+    Usage example:
+        from satdata.providers.smdc import SMDC
+        smdc = SMDC()
+        smdc.authorize()
+        df = smdc.fetch(source='electro_l2',
+                        instrument='skl',
+                        channel='das3vrt1',
+                        start_dt='2017-10-14 10:43:38',
+                        end_dt='2017-10-14 10:43:47',
+                        time_frame='1s',
+                        level='default')
     """
-    auth_url = 'http://localhost:8000/accounts/login/'
-    api_url = 'http://localhost:8000/db_iface/api/v2/'
-    metadata_url = 'http://localhost:8000/db_iface/api/v1/full/'
     # smdc auth credential related
-    auth_input_form = {
+    auth_input_form: Dict = {
         'username': None,
         'password': None,
         'csrfmiddlewaretoken': None
     }
-    headers = {
-        'referer': 'http://localhost:8000/accounts/login/'
-    }
-    cookie_names = {
+    cookie_names: Dict = {
         'sid': 'sessionid',
         'csrf': 'csrftoken'
     }
-    metadata = {
+    headers: Dict = {}
+    metadata: Dict = {
         # fill the metadata with data from the provider
     }
 
-    def __init__(self, log_level=logging.INFO):
+    def __init__(self, base_url: str = 'http://localhost:8000', log_level: int = logging.INFO):
         self.logger = self.get_logger(module_name=__name__, log_level=log_level)
+        if base_url:
+            self.base_url = base_url
+            self.auth_url = self.base_url + '/accounts/login/'
+            self.api_url = self.base_url + '/db_iface/api/v2/'
+            self.metadata_url = self.base_url + '/db_iface/api/v1/full/'
+            self.headers = {
+                'referer': self.base_url + '/accounts/login/'
+            }
+
 
     def authorize(self):
         cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -82,7 +98,7 @@ class smdc(DataProvider):
             config_path = config_file
         if not os.path.exists(config_path):
             raise AuthConfigNotFound(
-                'Please create a file called %s where %s is located and put auth credentials there' % (config_file, __file__))
+                'Please create a file called %s, put auth credentials there, and export SMDC_CONFIG_JSON=`pwd`/%s' % (config_file, config_file))
 
         with open(config_path, 'r') as f:
             auth_obj = json.load(f)
@@ -92,7 +108,7 @@ class smdc(DataProvider):
         self.auth_input_form['username'] = auth_obj['username']
         self.auth_input_form['password'] = auth_obj['password']
 
-        super(smdc, self).authorize()
+        super(SMDC, self).authorize()
         self.session = requests.Session()
         # use get to retrieve the csrf token
         self.session.get(self.auth_url)
@@ -171,7 +187,7 @@ class smdc(DataProvider):
             }
             # print(headers)
             # Todo backend won't accept the request without csrf_exempt. Need to work on that
-            response = super(smdc, self).fetch(self.api_url + 'query/', method='POST',
+            response = super(SMDC, self).fetch(self.api_url + 'query/', method='POST',
                                                headers=headers, payload=json.dumps(query))
             self._print_json_response(response)
             df = self._json_2_dataframe(response)
@@ -343,34 +359,7 @@ class smdc(DataProvider):
             return source
 
 
-class models(smdc):
-    def __init__(self):
-        self.logger = self.get_logger(__name__)
-        self.authorize()
-
-    def get_solar_wind_forecast(self, wave_length, start_dt, end_dt):
-        source = 'sdo'
-        if wave_length not in [193, 211, '193', '211', '0193', '0211']:
-            raise ArgumentValueError('Invalid wave length. Possible values are 193 or 211')
-
-        if isinstance(wave_length, int) and wave_length in [193, 211] or wave_length in ['193', '211']:
-            wave_length = '0' + str(wave_length)
-
-        instrument = 'sw_forecast_' + wave_length
-        channel = 'forecast_sw_speed'
-        return self.fetch(source=source,
-                          instrument=instrument,
-                          channel=channel,
-                          start_dt=start_dt,
-                          end_dt=end_dt,
-                          time_frame='auto')
-
-
-class goes13(smdc):
-    def __init__(self):
-        self.logger = self.get_logger(__name__)
-        self.authorize()
-
+class ForecastModel(SMDC):
     def get_solar_wind_forecast(self, wave_length, start_dt, end_dt):
         source = 'sdo'
         if wave_length not in [193, 211, '193', '211', '0193', '0211']:

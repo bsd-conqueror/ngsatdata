@@ -7,12 +7,13 @@ import unittest
 import pandas
 import pytest
 
-from satdata import providers
+from satdata.providers.smdc import SMDC, ForecastModel
 
 
 class TestSmdcProvider(unittest.TestCase):
     def setUp(self) -> None:
-        self.smdc = providers.smdc(log_level=logging.DEBUG)
+        self.smdc = SMDC(log_level=logging.DEBUG)
+        self.smdc.authorize()
         self.assertEqual(self.smdc.authorize(), True)
 
     def form_query_default_level(self):
@@ -61,8 +62,8 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_solar_wind_forecast(self):
-        from satdata.providers.smdc import models
-        m = models()
+        m = ForecastModel()
+        m.authorize()
         df = m.get_solar_wind_forecast(wave_length=193,
                                        start_dt='2017-10-14 10:00:00',
                                        end_dt='2017-10-14 12:00:00')
@@ -77,7 +78,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_dst_index(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='index', instrument='dst', channel='dst',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
@@ -93,7 +93,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_goes_level2_e20_with_source_name(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='goes15_level2', instrument='e13ew_e2', channel='e2',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
@@ -101,7 +100,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_index_wolf(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='index', instrument='wolf', channel='wolfnumber',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
@@ -109,7 +107,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_meteor_m2_das4vrt7(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='meteor_m2', instrument='skl1', channel='das4vrt7',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
@@ -117,7 +114,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_electro_l2_das3vrt6(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='electro_l2', instrument='skl', channel='das3vrt6',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='1h', level='default')
@@ -125,7 +121,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_dst_forecast(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='forecast', instrument='model_dst_v01', channel='dst',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
@@ -133,7 +128,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_fluence_forecast(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='forecast', instrument='model_fluence_1d', channel='e20',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
@@ -141,7 +135,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_model_solar_wind_forecast(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='models', instrument='ch', channel='forecast_sw_speed_193p',
                              start_dt='2018-03-24 08:00:00',
                              end_dt='2018-03-24 09:00:00', time_frame='auto', level='default')
@@ -149,7 +142,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_goes15_e13ew_level2(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='goes15_level2', instrument='e13ew_e2', channel='e2',
                              start_dt='2020-03-16 08:00:00',
                              end_dt='2020-03-16 09:00:00', time_frame='auto', level='default')
@@ -157,7 +149,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_goes16_e2(self):
-        self.smdc.authorize()
         df = self.smdc.fetch(source='goes16', instrument='integral_electrons', channel='e_ge_2',
                              start_dt='2020-03-16 18:00:00',
                              end_dt='2020-03-16 19:00:00', time_frame='auto', level='default')
@@ -166,8 +157,6 @@ class TestSmdcProvider(unittest.TestCase):
 
     # @pytest.mark.skip
     def test_get_goes16_xray(self):
-        smdc = providers.smdc(log_level=logging.DEBUG)
-        self.smdc.authorize()
         df = self.smdc.fetch(source='goes16', instrument='xrays', channel='nm01_08',
                              start_dt='2020-03-16 18:00:00',
                              end_dt='2020-03-16 19:00:00', time_frame='auto', level='default')

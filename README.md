@@ -23,8 +23,8 @@ export SMDC_CONFIG_JSON=`pwd`/smdc_config.json
 ```
 * to fetch data of the das3vrt1 channel of the SKL instrument of the Electro-L2 satellite
 ```Python
-from satdata import providers
-smdc = providers.smdc()
+from satdata.providers.smdc import SMDC
+smdc = SMDC()
 smdc.authorize()
 df = smdc.fetch(source='electro_l2',
                 instrument='skl',
