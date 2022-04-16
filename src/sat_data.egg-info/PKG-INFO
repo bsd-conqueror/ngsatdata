@@ -1,3 +1,20 @@
+Metadata-Version: 2.1
+Name: sat-data
+Version: 1.0.0
+Summary: SatData - a Python library for fetching space weather datasets
+Home-page: https://github.com/bsd-conqueror/satdata
+Author: Minh Duc, Nguyen
+Author-email: bsd@conqueror.pro
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/bsd-conqueror/satdata/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 # SatData - a Python library for fetching space weather datasets
 
 SatData has a machine-learning-ready unified API that allows you to fetch all public available space weather datasets
@@ -32,4 +49,6 @@ df = smdc.fetch(source='electro_l2',
                 time_frame='1s',
                 level='default')
 ```
+
+
 

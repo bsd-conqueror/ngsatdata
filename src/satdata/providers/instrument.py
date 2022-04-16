@@ -1,10 +1,10 @@
-from typing import Dict, List
-from .channel import Channel
 from typing import Dict
+
+from .channel import Channel
 
 
 class Instrument(object):
-    def __init__(self, source_name, codename, metadata):
+    def __init__(self, source_name: str, codename: str, metadata: Dict):
         self.source_name = source_name
         self.codename = codename
         self.metadata = metadata

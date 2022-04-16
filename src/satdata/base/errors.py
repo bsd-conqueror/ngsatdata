@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -31,92 +30,92 @@ SOFTWARE.
 # -----------------------------------------------------------------------------
 
 class BaseError(Exception):
-  """The Base Error class for all exceptions"""
-  pass
+    """The Base Error class for all exceptions"""
+    pass
 
 
 class ProviderNotSupported(BaseError):
-  """The provider is not available or not supported"""
-  pass
+    """The provider is not available or not supported"""
+    pass
 
 
 class AuthenticationError(BaseError):
-  """The provided authentication credentials are invalid"""
-  pass
+    """The provided authentication credentials are invalid"""
+    pass
 
 
 class RequestTimeout(BaseError):
-  """The data provider is not responding"""
-  pass
+    """The data provider is not responding"""
+    pass
 
 
 class AccessDenied(BaseError):
-  """The data provider does not allow accessing its data"""
-  pass
+    """The data provider does not allow accessing its data"""
+    pass
 
 
 class MethodNotSupported(BaseError):
-  """The request method is not supported"""
-  pass
+    """The request method is not supported"""
+    pass
 
 
 class LocalNetworkError(BaseError):
-  """Problems with local machine network connection"""
-  pass
+    """Problems with local machine network connection"""
+    pass
 
 
 class SatelliteNotFound(BaseError):
-  """There is no such satellite provided by the data provider"""
-  pass
+    """There is no such satellite provided by the data provider"""
+    pass
 
 
 class InstrumentNotFound(BaseError):
-  """The satellite has no such instrument"""
-  pass
+    """The satellite has no such instrument"""
+    pass
 
 
 class ChannelNotFound(BaseError):
-  """The instrument has no such data channel"""
-  pass
+    """The instrument has no such data channel"""
+    pass
 
 
 class ResponseSizeTooLarge(BaseError):
-  """The response size is too large to be passed through the Internet"""
-  pass
+    """The response size is too large to be passed through the Internet"""
+    pass
 
 
 class DateRangeTooLarge(BaseError):
-  """The selected date time period is too large"""
-  pass
+    """The selected date time period is too large"""
+    pass
 
 
 class TimeFrameTooSmall(BaseError):
-  """The data provider provide no data with such resolution or the selected resolution leads to a big response size"""
-  pass
+    """The data provider provide no data with such resolution or the selected resolution leads to a big response size"""
+    pass
 
 
 class TimeFrameNotAvailable(BaseError):
-  """The data channel does not have data for this time frame"""
-  pass
+    """The data channel does not have data for this time frame"""
+    pass
 
 
 class DatetimeValueError(BaseError):
-  """Invalid datetime value"""
-  pass
+    """Invalid datetime value"""
+    pass
 
 
 class ArgumentValueError(BaseError):
-  """Invalid argument value"""
-  pass
+    """Invalid argument value"""
+    pass
 
 
 class AuthConfigNotFound(BaseError):
-  """Authentication configuration file not found"""
-  pass
+    """Authentication configuration file not found"""
+    pass
 
 
 class AuthCredentialsNotFound(BaseError):
-  """Authentication configuration file not found"""
-  pass
+    """Authentication configuration file not found"""
+    pass
 
 # =============================================================================

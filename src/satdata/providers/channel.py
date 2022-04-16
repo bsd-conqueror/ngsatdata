@@ -1,6 +1,3 @@
-from pprint import pprint
-
-
 class Channel(object):
     def __init__(self, source_name, instrument_name, codename, resolutions, metadata):
         self.source_name = source_name
@@ -28,10 +25,9 @@ class Channel(object):
     def stream_subscription_info(self):
         return {
             'channel_id': '{s}.{i}.{c}'.format(
-                s = self.source_name,
-                i = self.instrument_name,
-                c = self.codename
+                s=self.source_name,
+                i=self.instrument_name,
+                c=self.codename
             ),
             'resolution': self.resolutions[0]
         }
-

@@ -1,9 +1,10 @@
-from .instrument import Instrument
 from typing import Dict
+
+from .instrument import Instrument
 
 
 class Source(object):
-    def __init__(self, codename, metadata):
+    def __init__(self, codename: str, metadata: Dict):
         self.codename = codename
         self.metadata = metadata
         self.instruments = {
@@ -19,7 +20,6 @@ class Source(object):
         else:
             self.fullname = None
         self.tags = metadata['tags']
-
 
     def __repr__(self) -> str:
         return f'<Source object: codename={self.codename}, instruments={list(self.instruments.keys())}>'
