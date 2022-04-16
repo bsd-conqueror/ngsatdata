@@ -198,7 +198,7 @@ class SMDC(DataProvider):
 
     def _print_json_response(self, response):
         r = json.loads(response)
-        self.logger.info(r)
+        self.logger.debug(r)
         for elem in r['data']:
             self.logger.debug('request: %s' % elem['request'])
             self.logger.debug('code: %r' % elem['result']['code'])
@@ -235,7 +235,6 @@ class SMDC(DataProvider):
                     for i in range(1, len(series['response'])):
                         data[series['request']] = series['response'][i]
                     df = pandas.DataFrame(data=data).set_index('dt')
-                    print(type(df.index[0]))
                     if isinstance(df.index[0], str):
                         df.index = pandas.to_datetime(df.index)
                     else:
