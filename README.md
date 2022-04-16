@@ -10,14 +10,16 @@ If you're interested in using SatData in your work, please send me an e-mail to 
 
 ## To use the SMDC driver
 
-* create a file called smdc_config.json
-* put it to the same folder where smdc.py is located
-* add the following authorization credentials to smdc_config.json
+* create a file called smdc_config.jsonp* add the following authorization credentials to smdc_config.json
 ```
 {
   "username": "your SMDC username",
   "password": "you SMDC password"
 }
+```
+* export the path to the file using the SMDC_CONFIG_JSON enviroment variable
+```bash
+export SMDC_CONFIG_JSON=`pwd`/smdc_config.json
 ```
 * to fetch data of the das3vrt1 channel of the SKL instrument of the Electro-L2 satellite
 ```Python
