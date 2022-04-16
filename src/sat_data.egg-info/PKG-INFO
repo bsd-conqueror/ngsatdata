@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: sat-data
-Version: 1.0.0
+Version: 1.0.1
 Summary: SatData - a Python library for fetching space weather datasets
 Home-page: https://github.com/bsd-conqueror/satdata
 Author: Minh Duc, Nguyen
