@@ -11,8 +11,8 @@ import pandas
 import requests
 import six
 
-from satdata.base.dataprovider import DataProvider
-from satdata.base.errors import *
+from ngsatdata.base.dataprovider import DataProvider
+from ngsatdata.base.errors import *
 
 from .source import Source
 
@@ -52,7 +52,7 @@ class SMDC(DataProvider):
         cookie_names (dict):
     
     Usage example:
-        from satdata.providers.smdc import SMDC
+        from ngsatdata.providers.smdc import SMDC
         smdc = SMDC()
         smdc.authorize()
         df = smdc.fetch(source='electro_l2',

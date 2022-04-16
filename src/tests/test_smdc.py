@@ -5,9 +5,8 @@ import logging
 import unittest
 
 import pandas
-import pytest
 
-from satdata.providers.smdc import SMDC, ForecastModel
+from ngsatdata.providers.smdc import SMDC, ForecastModel
 
 
 class TestSmdcProvider(unittest.TestCase):

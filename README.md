@@ -1,6 +1,6 @@
-# SatData - a Python library for fetching space weather datasets
+# NgSatData - a Python library for fetching space weather datasets
 
-SatData has a machine-learning-ready unified API that allows you to fetch all public available space weather datasets
+NgSatData has a machine-learning-ready unified API that allows you to fetch all public available space weather datasets
 of a data center via its provided driver.
 Currently, only one driver by the Space Monitoring Data Center (SMDC - http://smdc.sinp.msu.ru) of SINP MSU is provided.
 
@@ -23,7 +23,7 @@ export SMDC_CONFIG_JSON=`pwd`/smdc_config.json
 ```
 * to fetch data of the das3vrt1 channel of the SKL instrument of the Electro-L2 satellite
 ```Python
-from satdata.providers.smdc import SMDC
+from ngsatdata.providers.smdc import SMDC
 smdc = SMDC()
 smdc.authorize()
 df = smdc.fetch(source='electro_l2',

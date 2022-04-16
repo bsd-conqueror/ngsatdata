@@ -3,7 +3,7 @@
 
 import logging
 
-from satdata.base.errors import *
+from ngsatdata.base.errors import *
 
 http_5xx_codes = [500, 501, 502, 503, 504, 511, 520, 521, 522, 525, 530]
 http_4xx_codes = [400, 401, 403, 405, 408, 421, 422]
@@ -24,7 +24,7 @@ class DataProvider(object):
     def __init__(self, log_level=logging.INFO):
         self.logger = self.get_logger(__name__, log_level)
 
-    def get_logger(self, module_name='satdata', log_level=logging.INFO):
+    def get_logger(self, module_name='ngsatdata', log_level=logging.INFO):
         logger = logging.getLogger(module_name)
         if not getattr(logger, 'handler_set', None):
             # get the log level of specified module and set it
